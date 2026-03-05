@@ -121,8 +121,99 @@ public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
 
   @Override
   public boolean remove(Node<T> rootNode, T nodeElement) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'remove'");
+    // Valida entradas inválidas.
+    if (rootNode == null || nodeElement == null || rootNode.getValue() == null) {
+      return false;
+    }
+
+    // parentNode guarda o pai do currentNode durante a busca.
+    Node<T> parentNode = null;
+    Node<T> currentNode = rootNode;
+
+    // Busca o nó que contém nodeElement.
+    while (currentNode != null) {
+      int compareResult = nodeElement.compareTo(currentNode.getValue());
+
+      // Encontrou o nó que será removido ele sai do loop infinito.
+      if (compareResult == 0) {
+        break;
+      }
+
+      parentNode = currentNode;
+      if (compareResult < 0) {
+        currentNode = currentNode.getLeft();
+      } else {
+        currentNode = currentNode.getRight();
+      }
+    }
+
+    // Não encontrou o elemento na árvore.
+    if (currentNode == null) {
+      return false;
+    }
+
+    // Caso com 2 filhos: promove o filho da direita e
+    // encaixa a subárvore da esquerda no nó mais à esquerda dele.
+    if (currentNode.getLeft() != null && currentNode.getRight() != null) {
+      Node<T> rightSubtree = currentNode.getRight();
+      Node<T> leftSubtree = currentNode.getLeft();
+
+      // Começa no topo da subárvore direita para caminhar até o nó mais à esquerda.
+      Node<T> leftMostInRightSubtree = rightSubtree;
+      while (leftMostInRightSubtree.getLeft() != null) {
+        leftMostInRightSubtree = leftMostInRightSubtree.getLeft();
+      }
+      
+      leftMostInRightSubtree.setLeft(leftSubtree);
+      // basicamente ele pegou o nó mais esquerda da subarvore direita 
+      // e colocou a subarovre esquerda como filho dele.
+
+      // Se o alvo é a raiz, copia os dados da nova raiz para o objeto raiz atual.
+      if (parentNode == null) {
+        rootNode.setValue(rightSubtree.getValue());
+        rootNode.setLeft(rightSubtree.getLeft());
+        rootNode.setRight(rightSubtree.getRight());
+        return true;
+      }
+
+      // Reconecta o pai para apontar para a nova raiz da subárvore.
+      if (parentNode.getLeft() == currentNode) {
+        parentNode.setLeft(rightSubtree);
+      } else {
+        parentNode.setRight(rightSubtree);
+      }
+
+      return true;
+    }
+
+    // Nó com 0 ou 1 filho: pega o único filho (ou null).
+    Node<T> childNode = currentNode.getLeft() != null ? currentNode.getLeft() : currentNode.getRight();
+
+    // Remoção da raiz.
+    if (parentNode == null) {
+      // Raiz sem filhos: limpa o conteúdo do nó raiz.
+      if (childNode == null) {
+        rootNode.setValue(null);
+        rootNode.setLeft(null);
+        rootNode.setRight(null);
+        return true;
+      }
+
+      // Raiz com 1 filho: copia os dados do filho para a raiz.
+      rootNode.setValue(childNode.getValue());
+      rootNode.setLeft(childNode.getLeft());
+      rootNode.setRight(childNode.getRight());
+      return true;
+    }
+
+    // Religa o pai ao filho do nó removido.
+    if (parentNode.getLeft() == currentNode) {
+      parentNode.setLeft(childNode);
+    } else {
+      parentNode.setRight(childNode);
+    }
+
+    return true;
   }
 
   @Override

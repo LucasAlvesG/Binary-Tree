@@ -273,8 +273,39 @@ public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
 
   @Override
   public Node<T> getBrother(Node<T> rootNode, T nodeElement) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getBrother'");
+    if (rootNode == null || nodeElement == null || rootNode.getValue() == null) {
+      return null;
+    }
+    boolean leftOrRight = true;
+    Node<T> parentNode = null;
+    Node<T> brotherNode = null;
+    Node<T> currentNode = rootNode;
+    
+    while (true) {
+      int compareResult = nodeElement.compareTo(currentNode.getValue());
+
+      if (compareResult == 0) {
+        if (parentNode != null) {
+          if (leftOrRight) {
+            brotherNode = parentNode.getRight();
+          } else {
+            brotherNode = parentNode.getLeft();
+          }
+        }
+        break;
+      } 
+      if (compareResult < 0) {
+        parentNode = currentNode;
+        currentNode = currentNode.getLeft();
+        leftOrRight = true;
+      } else {
+        parentNode = currentNode;
+        currentNode = currentNode.getRight();
+        leftOrRight = false;
+      }
+      
+    }
+    return brotherNode;
   }
 
   @Override
@@ -321,7 +352,7 @@ public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
     // basicamente ele entra em recursividade ate chegar no nó mais profundo da árvore, 
     // e depois vai retornando o valor da profundidade para os nós anteriores que vão 
     // se somando 1 a cada nível, até chegar na raiz que vai retornar a profundidade total da árvore.
-    //   6 
+    //     6    
     //    / \
     //   2   8
     //  / \
@@ -391,8 +422,24 @@ public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
 
   @Override
   public Boolean isComplete(Node<T> rootNode) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'isComplete'");
+
+    // a ideia aqui é descobrir o Depth da arvore e verificar qual seria o numero de 
+    // elementos para que uma arvore dessa profundidade seja completa se o numero de nodes ou elementos
+    // for menor doq o correto quer dizer 
+    if (rootNode == null) return true;
+    int depth = calculateTreeDepth(rootNode);
+    int maxNodes = (int) (Math.pow(2, depth) - 1);
+    int actualNodes = countNodes(rootNode);
+    if (actualNodes < maxNodes) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  private int countNodes(Node<T> node) {
+    if (node == null) return 0;
+    return 1 + countNodes(node.getLeft()) + countNodes(node.getRight());
   }
 
 }

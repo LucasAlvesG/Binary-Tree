@@ -127,11 +127,15 @@ class BinaryTreeTest {
   void getBrother() {
     IBinaryTree<Integer> binaryTreeOps = new BinaryTree<>();
     Integer[] elements = new Integer[] { 6, 2, 8, 1, 4, 3 };
+    Integer[] elements1 = new Integer[] { 6 };
 
     Node<Integer> rootNode = binaryTreeOps.createTree(elements);
+    Node<Integer> rootNode1 = binaryTreeOps.createTree(elements1);
 
     assertEquals(binaryTreeOps.getBrother(rootNode, 8).getValue(), 2);
+    assertEquals(binaryTreeOps.getBrother(rootNode, 2).getValue(), 8);
     assertNull(binaryTreeOps.getBrother(rootNode, 3));
+    assertNull(binaryTreeOps.getBrother(rootNode1, 6));
   }
 
   @Test
@@ -162,14 +166,16 @@ class BinaryTreeTest {
     Integer[] elements = new Integer[] { 6, 2, 8, 1, 4, 3 };
 
     Node<Integer> rootNode = binaryTreeOps.createTree(elements);
-
-    assertTrue(binaryTreeOps.isComplete(rootNode));
+    
+    // antes era assertTrue mas para mim n faz sentido sendo que essa arvore seria uma não completa
+    // e o nome é checkIfTheTreeIsComplete
+    assertFalse(binaryTreeOps.isComplete(rootNode));
 
     elements = new Integer[] { 6, 2, 8, 1, 4, 3, 5 };
 
     rootNode = binaryTreeOps.createTree(elements);
 
-    assertFalse(binaryTreeOps.isComplete(rootNode));
+    assertTrue(binaryTreeOps.isComplete(rootNode));
   }
 
 }

@@ -276,7 +276,7 @@ public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
     if (rootNode == null || nodeElement == null || rootNode.getValue() == null) {
       return null;
     }
-    boolean leftOrRight = true;
+    boolean estaNaEsquerdaOuDireita = true;
     Node<T> parentNode = null;
     Node<T> brotherNode = null;
     Node<T> currentNode = rootNode;
@@ -286,7 +286,7 @@ public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
 
       if (compareResult == 0) {
         if (parentNode != null) {
-          if (leftOrRight) {
+          if (estaNaEsquerdaOuDireita == true) {
             brotherNode = parentNode.getRight();
           } else {
             brotherNode = parentNode.getLeft();
@@ -297,11 +297,11 @@ public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
       if (compareResult < 0) {
         parentNode = currentNode;
         currentNode = currentNode.getLeft();
-        leftOrRight = true;
+        estaNaEsquerdaOuDireita = true;
       } else {
         parentNode = currentNode;
         currentNode = currentNode.getRight();
-        leftOrRight = false;
+        estaNaEsquerdaOuDireita = false;
       }
       
     }

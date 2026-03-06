@@ -72,8 +72,37 @@ public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
 
   @Override
   public Integer degree(Node<T> rootNode, T nodeElement) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'degree'");
+    if (rootNode == null || nodeElement == null) {
+      return null;
+    }
+
+    Node<T> currentNode = rootNode;
+
+    // Busca o nó que contém nodeElement
+    while (currentNode != null) {
+      int compareResult = nodeElement.compareTo(currentNode.getValue());
+
+      if (compareResult == 0) {
+        // Encontrou o nó, calcula o grau (número de filhos) tentando ir para direita e esquerda.
+        int degree = 0;
+        if (currentNode.getLeft() != null) {
+          degree++;
+        }
+        if (currentNode.getRight() != null) {
+          degree++;
+        }
+        return degree;
+      }
+
+      if (compareResult < 0) {
+        currentNode = currentNode.getLeft();
+      } else {
+        currentNode = currentNode.getRight();
+      }
+    }
+
+    // Elemento não encontrado
+    return null;
   }
 
   @Override

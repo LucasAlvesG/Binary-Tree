@@ -283,14 +283,60 @@ public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
 
   @Override
   public Integer calculateTreeDepth(Node<T> rootNode) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'calculateTreeDepth'");
+    // Se a raiz é nula, a profundidade é 0 (árvore vazia)
+    if (rootNode == null) {
+      return 0;
+    }
+
+    // Se o nó é uma folha (sem filhos), a profundidade é 0
+    if (rootNode.getLeft() == null && rootNode.getRight() == null) {
+      return 0;
+    }
+
+    // Calcula a profundidade da subárvore esquerda
+    int leftDepth = calculateTreeDepth(rootNode.getLeft());
+    // Calcula a profundidade da subárvore direita
+    int rightDepth = calculateTreeDepth(rootNode.getRight());
+
+    // basicamente ele entra em recursividade ate chegar no nó mais profundo da árvore, 
+    // e depois vai retornando o valor da profundidade para os nós anteriores que vão 
+    // se somando 1 a cada nível, até chegar na raiz que vai retornar a profundidade total da árvore.
+    //   6 
+    //    / \
+    //   2   8
+    //  / \
+    // 1   4  o Math.max funcionaria aqui onde o nó da esquerda retorna 0 e o da direita retorna 1
+    //    /   e ele vai pegar o maior para fazer a soma.
+    //   3
+    return 1 + Math.max(leftDepth, rightDepth);
   }
 
   @Override
   public Integer calculateNodeLevel(Node<T> rootNode, T nodeElement) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'calculateNodeLevel'");
+    if (rootNode == null || nodeElement == null) {
+      return null;
+    }
+
+    Node<T> currentNode = rootNode;
+    int level = 0;
+
+    while (currentNode != null) {
+      int compareResult = nodeElement.compareTo(currentNode.getValue());
+
+      if (compareResult == 0) {
+        return level;
+      }
+
+      if (compareResult < 0) {
+        currentNode = currentNode.getLeft();
+      } else {
+        currentNode = currentNode.getRight();
+      }
+
+      level++;
+    }
+
+    return null;
   }
 
   @Override
